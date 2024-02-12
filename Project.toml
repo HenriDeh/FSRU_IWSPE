@@ -1,7 +1,7 @@
 name = "FSRU_IWSPE"
 uuid = "3bfc7b26-b1c6-4e53-ac49-fae2428c8b24"
 authors = ["Henri Dehaybe <47037088+HenriDeh@users.noreply.github.com> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
