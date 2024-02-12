@@ -1,4 +1,4 @@
-using FSRU, Distances, JuMP
+using FSRU_IWSPE, Distances, JuMP
 
 ports_coordinates = Dict(["Mukran" => (13.644526, 54.512157),"Wilhelmshaven" => (8.108275, 53.640799), "Brunsbüttel" => (9.175174, 53.888166), "Lubmin" => (13.648727, 54.151454), "Stade" => (9.506341, 53.648904), "Emden" => (7.187397, 53.335209), "Rostock" => (12.106811, 54.098095), "Lubeck" => (10.685321, 53.874815), "Bremerhaven" => (8.526210, 53.593061), "Hambourg" => (9.962496, 53.507492), "Duisburg" => (6.739063, 51.431325)])
 

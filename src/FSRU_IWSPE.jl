@@ -1,4 +1,4 @@
-module FSRU
+module FSRU_IWSPE
 using Reexport
 @reexport using JuMP, HiGHS, DataStructures, Graphs, MetaGraphs
 include("graph_construction.jl")
