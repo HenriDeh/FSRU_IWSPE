@@ -27,29 +27,29 @@ end
 ##Loading and preprocessing
 function create_graph(ports_coordinates)
     begin #load data
-        nuts_fc = GeoJSON.read(read("data/NUTS_LB_2021_4326.geojson"))
+        nuts_fc = GeoJSON.read(read(joinpath(@__DIR__, "..", "data/NUTS_LB_2021_4326.geojson")))
         nuts_dict = Dict(f.NUTS_ID => f.geometry for f in nuts_fc)
 
-        nodes_fc = GeoJSON.read(read("data/IGGIELGN_Nodes.geojson"))
+        nodes_fc = GeoJSON.read(read(joinpath(@__DIR__, "..", "data/IGGIELGN_Nodes.geojson")))
         nodes_df = DataFrame(node_id = String[], x_coor = Float64[], y_coor = Float64[], country_code = String[], nuts_id_2 = String[])
         for n in nodes_fc
             n.country_code == "FI" && continue #remove nordstream
             push!(nodes_df, [n.id, n.geometry.coordinates..., n.country_code, n.param["nuts_id_2"]])
         end
 
-        arcs_fc = GeoJSON.read(read("data/IGGIELGN_PipeSegments.geojson"))
+        arcs_fc = GeoJSON.read(read(joinpath(@__DIR__, "..", "data/IGGIELGN_PipeSegments.geojson")))
         arcs_df = DataFrame(pipe_id = String[], from_x_coor = Float64[], from_y_coor = Float64[], to_x_coor = Float64[], to_y_coor = Float64[], from_node = String[], to_node = String[], from_country = String[], to_country = String[], diameter_mm = Float64[], length_km = Float64[], capacity_Mm3_per_d = Float64[], is_bothDirection = Int[])
         for a in arcs_fc
             #a.param.is_H_gas == 1 || continue #only H-Gas
             push!(arcs_df, (a.id, a.geometry[1][1], a.geometry[1][2], a.geometry[2][1], a.geometry[2][2], a.param["nuts_id_2"][1], a.param["nuts_id_2"][2], a.country_code[1], a.country_code[2],  a.param["diameter_mm"], a.param["length_km"], a.param["max_cap_M_m3_per_d"], a.param["is_bothDirection"]))
         end
 
-        consumers_fc = GeoJSON.read(read("data/IGGIELGN_Consumers.geojson"))
+        consumers_fc = GeoJSON.read(read(joinpath(@__DIR__, "..", "data/IGGIELGN_Consumers.geojson")))
         consumers_df = DataFrame(node_id = String[], x_coor = Float64[], y_coor = Float64[], country_code = String[], nuts_id_2 = String[], capacity_E_MW = Float64[], capacity_TH_MW= Float64[])
         for n in consumers_fc
             push!(consumers_df, [n.id, n.geometry.coordinates..., n.country_code, n.param["nuts_id_2"], n.param["capacity_E_MW"], n.param["capacity_TH_MW"]])
         end
-        population_df = CSV.read("data/demo_r_pjangroup_linear.csv", DataFrame)
+        population_df = CSV.read(joinpath(@__DIR__, "..", "data/demo_r_pjangroup_linear.csv"), DataFrame)
         @rsubset! population_df begin
             occursin(r"^DE..$", :geo) #filter DE nuts2
             :TIME_PERIOD == 2022
@@ -63,7 +63,7 @@ function create_graph(ports_coordinates)
                 @error "$(:geo) not in dict"
             end
         end
-        gdp_df = CSV.read("data/gdppc_nuts2.csv", DataFrame)
+        gdp_df = CSV.read(joinpath(@__DIR__, "..", "data/gdppc_nuts2.csv"), DataFrame)
         @rselect! gdp_df begin
             :geo 
             :gdppc = :OBS_VALUE
